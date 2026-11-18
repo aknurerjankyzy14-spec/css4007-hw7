@@ -2,7 +2,8 @@
 
 ## AI-use declaration
 
-Which tools did you use, and for what?
+I used ChatGPT to understand
+the assignment and the PyCharm and Git steps. It helped me calculate the answers for Part A, write the explanations and comparison table, and understand the first method in Part B. It also showed me how to add photos of my handwritten work to the report.
 
 ## Setup and reproduction
 
@@ -11,8 +12,10 @@ paper replay, training and frozen-policy evaluation.
 
 ## Part A — Count states and actions
 
-Link your paper answers and comparison table for Blackjack, Durak, tic-tac-toe
-and Nim. Show formulas, assumptions, example legal actions and hidden information.
+- [Part A — page 1](paper/part-a-01.jpg)
+- [Part A — page 2](paper/part-a-02.jpg)
+- [Part A — page 3](paper/part-a-03.jpeg)
+- [Part A — page 4](paper/part-a-04.jpeg)
 
 ## Part B — Paper calculations
 
