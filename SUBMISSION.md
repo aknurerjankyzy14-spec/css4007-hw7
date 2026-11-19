@@ -31,9 +31,17 @@ Durak would need a very large Q-table. One player alone can have 1,947,792 diffe
 The number of legal actions depends on the position. For example, tic-tac-toe has 9 action labels, one for each cell. Only 5 cells are free on the given board.
 
 ## Part B — Paper calculations
+I used the four games from `data/paper-games.csv`. I did two model-based sweeps, one Monte Carlo pass, and two passes each for TD(0) and Q-learning. I kept the values from the first pass when I started the second pass.
 
-Link scans/photos of all four methods. Commit the original paper work before
-implementing learners. Keep originals alongside any corrections.
+For state A, model-based learning and Monte Carlo both gave V(A) = −1/3. After two passes, TD(0) gave V(A) = −0.14003, and Q-learning gave Q(A, hit) = −0.13922. The photos below show my calculations step by step.
+
+- [Part B — page 1](paper/part-b-01.jpeg)
+- [Part B — page 2](paper/part-b-02.jpeg)
+- [Part B — page 3](paper/part-b-03.jpeg)
+- [Part B — page 4](paper/part-b-04.jpeg)
+- [Part B — page 5](paper/part-b-05.jpeg)
+- [Part B — page 6](paper/part-b-06.jpeg)
+- [Part B — page 7](paper/part-b-07.jpeg)
 
 ## Part C — Reproduce the calculations
 
