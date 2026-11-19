@@ -7,8 +7,10 @@ the assignment and the PyCharm and Git steps. It helped me calculate the answers
 
 ## Setup and reproduction
 
-Record dependency versions, installation steps and exact commands for the
-paper replay, training and frozen-policy evaluation.
+- Python version: 3.13.2
+- Part C uses only the Python standard library. No extra packages are needed.
+- To reproduce Part C, run `python paper_replay.py` from the project folder.
+- Results are saved in `outputs/paper-replay/replay.txt` and `outputs/paper-replay/comparison.csv`.
 
 ## Part A — Count states and actions
 
@@ -45,10 +47,18 @@ For state A, model-based learning and Monte Carlo both gave V(A) = −1/3. After
 
 ## Part C — Reproduce the calculations
 
-Link the fixed-history replay output in outputs/paper-replay/.
+I ran `python paper_replay.py` on the four games from `data/paper-games.csv`.
+All 47 checks matched the Part B reference values used in the script.
+
+- [Full output for all four methods](outputs/paper-replay/replay.txt)
+- [Full comparison table with all 47 checks](outputs/paper-replay/comparison.csv)
 
 | Method | State / action | Sweep / pass / update | Paper result | Program result | Difference | Explanation |
-| --- | --- | --- | --- | --- | --- | --- |
+|---|---|---|---:|---:|---:|---|
+| Model-based | A | Sweep 2 | -1/3 | -1/3 | 0 | One of the three hits from A ended in a loss. The other two led to B, where the mean reward was 0. |
+| Monte Carlo | A | Pass 1 | -1/3 | -1/3 | 0 | The returns were +1, -1 and -1. Their mean was -1/3. |
+| TD(0) | A | Pass 2, game 4, step 1 | -0.14003 | -14003/100000 | 0 | The update used V(B) = 0.091. |
+| Q-learning | A / hit | Pass 2, game 4, step 1 | -0.13922 | -6961/50000 | 0 | The update used the higher Q-value in B, which was 0.091. |
 
 ## Part D — Simulated games
 

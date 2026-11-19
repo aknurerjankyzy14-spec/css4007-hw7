@@ -1,0 +1,89 @@
+Model: state action next | count/visits | probability | mean reward
+A hit B | 2/3 | 2/3 | 0
+B stick END | 2/2 | 1 | 0
+A hit END | 1/3 | 1/3 | -1
+C hit D | 1/1 | 1 | 0
+D hit E | 1/1 | 1 | 0
+E stick END | 1/1 | 1 | 0
+A stick: unobserved
+B hit: unobserved
+C stick: unobserved
+D stick: unobserved
+E hit: unobserved
+Sweep 1: V(A) = -1/3
+Sweep 1: V(B) = 0
+Sweep 1: V(C) = 0
+Sweep 1: V(D) = 0
+Sweep 1: V(E) = 0
+Sweep 2: V(A) = -1/3
+Sweep 2: V(B) = 0
+Sweep 2: V(C) = 0
+Sweep 2: V(D) = 0
+Sweep 2: V(E) = 0
+MC game 1: return from B = 1
+MC game 1: return from A = 1
+MC game 2: return from A = -1
+MC game 3: return from E = 0
+MC game 3: return from D = 0
+MC game 3: return from C = 0
+MC game 4: return from B = -1
+MC game 4: return from A = -1
+MC A: returns=[1, -1, -1], visits=3, mean=-1/3
+MC B: returns=[1, -1], visits=2, mean=0
+MC C: returns=[0], visits=1, mean=0
+MC D: returns=[0], visits=1, mean=0
+MC E: returns=[0], visits=1, mean=0
+TD(0): pass game.step pair next | old reward continuation target new
+pass 1, game 1, step 1 A -> B | 0 0 0 0 0
+pass 1, game 1, step 2 B -> END | 0 1 0 1 1/10
+pass 1, game 2, step 1 A -> END | 0 -1 0 -1 -1/10
+pass 1, game 3, step 1 C -> D | 0 0 0 0 0
+pass 1, game 3, step 2 D -> E | 0 0 0 0 0
+pass 1, game 3, step 3 E -> END | 0 0 0 0 0
+pass 1, game 4, step 1 A -> B | -1/10 0 1/10 1/10 -2/25
+pass 1, game 4, step 2 B -> END | 1/10 -1 0 -1 -1/100
+Pass 1: V(A) = -2/25
+Pass 1: V(B) = -1/100
+Pass 1: V(C) = 0
+Pass 1: V(D) = 0
+Pass 1: V(E) = 0
+pass 2, game 1, step 1 A -> B | -2/25 0 -1/100 -1/100 -73/1000
+pass 2, game 1, step 2 B -> END | -1/100 1 0 1 91/1000
+pass 2, game 2, step 1 A -> END | -73/1000 -1 0 -1 -1657/10000
+pass 2, game 3, step 1 C -> D | 0 0 0 0 0
+pass 2, game 3, step 2 D -> E | 0 0 0 0 0
+pass 2, game 3, step 3 E -> END | 0 0 0 0 0
+pass 2, game 4, step 1 A -> B | -1657/10000 0 91/1000 91/1000 -14003/100000
+pass 2, game 4, step 2 B -> END | 91/1000 -1 0 -1 -181/10000
+Pass 2: V(A) = -14003/100000
+Pass 2: V(B) = -181/10000
+Pass 2: V(C) = 0
+Pass 2: V(D) = 0
+Pass 2: V(E) = 0
+Q-learning: pass game.step pair next | old reward continuation target new
+pass 1, game 1, step 1 A/hit -> B | 0 0 0 0 0
+pass 1, game 1, step 2 B/stick -> END | 0 1 0 1 1/10
+pass 1, game 2, step 1 A/hit -> END | 0 -1 0 -1 -1/10
+pass 1, game 3, step 1 C/hit -> D | 0 0 0 0 0
+pass 1, game 3, step 2 D/hit -> E | 0 0 0 0 0
+pass 1, game 3, step 3 E/stick -> END | 0 0 0 0 0
+pass 1, game 4, step 1 A/hit -> B | -1/10 0 1/10 1/10 -2/25
+pass 1, game 4, step 2 B/stick -> END | 1/10 -1 0 -1 -1/100
+Pass 1: A stick=0, hit=-2/25, greedy=stick
+Pass 1: B stick=-1/100, hit=0, greedy=hit
+Pass 1: C stick=0, hit=0, greedy=tie
+Pass 1: D stick=0, hit=0, greedy=tie
+Pass 1: E stick=0, hit=0, greedy=tie
+pass 2, game 1, step 1 A/hit -> B | -2/25 0 0 0 -9/125
+pass 2, game 1, step 2 B/stick -> END | -1/100 1 0 1 91/1000
+pass 2, game 2, step 1 A/hit -> END | -9/125 -1 0 -1 -103/625
+pass 2, game 3, step 1 C/hit -> D | 0 0 0 0 0
+pass 2, game 3, step 2 D/hit -> E | 0 0 0 0 0
+pass 2, game 3, step 3 E/stick -> END | 0 0 0 0 0
+pass 2, game 4, step 1 A/hit -> B | -103/625 0 91/1000 91/1000 -6961/50000
+pass 2, game 4, step 2 B/stick -> END | 91/1000 -1 0 -1 -181/10000
+Pass 2: A stick=0, hit=-6961/50000, greedy=stick
+Pass 2: B stick=-181/10000, hit=0, greedy=hit
+Pass 2: C stick=0, hit=0, greedy=tie
+Pass 2: D stick=0, hit=0, greedy=tie
+Pass 2: E stick=0, hit=0, greedy=tie

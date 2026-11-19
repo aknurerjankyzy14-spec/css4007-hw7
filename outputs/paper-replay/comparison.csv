@@ -1,0 +1,48 @@
+Method,State/action,Sweep/pass/update,Paper result,Program result,Difference,Explanation
+Model-based,A,sweep 1,-1/3,-1/3,0,Match
+Model-based,B,sweep 1,0,0,0,Match
+Model-based,C,sweep 1,0,0,0,Match
+Model-based,D,sweep 1,0,0,0,Match
+Model-based,E,sweep 1,0,0,0,Match
+Model-based,A,sweep 2,-1/3,-1/3,0,Match
+Model-based,B,sweep 2,0,0,0,Match
+Model-based,C,sweep 2,0,0,0,Match
+Model-based,D,sweep 2,0,0,0,Match
+Model-based,E,sweep 2,0,0,0,Match
+Monte Carlo,A,pass 1,-1/3,-1/3,0,Match
+Monte Carlo,B,pass 1,0,0,0,Match
+Monte Carlo,C,pass 1,0,0,0,Match
+Monte Carlo,D,pass 1,0,0,0,Match
+Monte Carlo,E,pass 1,0,0,0,Match
+TD(0),A,"pass 1, game 1, step 1",0,0,0,Match
+TD(0),B,"pass 1, game 1, step 2",1/10,1/10,0,Match
+TD(0),A,"pass 1, game 2, step 1",-1/10,-1/10,0,Match
+TD(0),C,"pass 1, game 3, step 1",0,0,0,Match
+TD(0),D,"pass 1, game 3, step 2",0,0,0,Match
+TD(0),E,"pass 1, game 3, step 3",0,0,0,Match
+TD(0),A,"pass 1, game 4, step 1",-2/25,-2/25,0,Match
+TD(0),B,"pass 1, game 4, step 2",-1/100,-1/100,0,Match
+TD(0),A,"pass 2, game 1, step 1",-73/1000,-73/1000,0,Match
+TD(0),B,"pass 2, game 1, step 2",91/1000,91/1000,0,Match
+TD(0),A,"pass 2, game 2, step 1",-1657/10000,-1657/10000,0,Match
+TD(0),C,"pass 2, game 3, step 1",0,0,0,Match
+TD(0),D,"pass 2, game 3, step 2",0,0,0,Match
+TD(0),E,"pass 2, game 3, step 3",0,0,0,Match
+TD(0),A,"pass 2, game 4, step 1",-14003/100000,-14003/100000,0,Match
+TD(0),B,"pass 2, game 4, step 2",-181/10000,-181/10000,0,Match
+Q-learning,A/hit,"pass 1, game 1, step 1",0,0,0,Match
+Q-learning,B/stick,"pass 1, game 1, step 2",1/10,1/10,0,Match
+Q-learning,A/hit,"pass 1, game 2, step 1",-1/10,-1/10,0,Match
+Q-learning,C/hit,"pass 1, game 3, step 1",0,0,0,Match
+Q-learning,D/hit,"pass 1, game 3, step 2",0,0,0,Match
+Q-learning,E/stick,"pass 1, game 3, step 3",0,0,0,Match
+Q-learning,A/hit,"pass 1, game 4, step 1",-2/25,-2/25,0,Match
+Q-learning,B/stick,"pass 1, game 4, step 2",-1/100,-1/100,0,Match
+Q-learning,A/hit,"pass 2, game 1, step 1",-9/125,-9/125,0,Match
+Q-learning,B/stick,"pass 2, game 1, step 2",91/1000,91/1000,0,Match
+Q-learning,A/hit,"pass 2, game 2, step 1",-103/625,-103/625,0,Match
+Q-learning,C/hit,"pass 2, game 3, step 1",0,0,0,Match
+Q-learning,D/hit,"pass 2, game 3, step 2",0,0,0,Match
+Q-learning,E/stick,"pass 2, game 3, step 3",0,0,0,Match
+Q-learning,A/hit,"pass 2, game 4, step 1",-6961/50000,-6961/50000,0,Match
+Q-learning,B/stick,"pass 2, game 4, step 2",-181/10000,-181/10000,0,Match
