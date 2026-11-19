@@ -2,15 +2,29 @@
 
 ## AI-use declaration
 
-I used ChatGPT to understand
-the assignment and the PyCharm and Git steps. It helped me calculate the answers for Part A, write the explanations and comparison table, and understand the first method in Part B. It also showed me how to add photos of my handwritten work to the report.
+I used ChatGPT to understand the assignment and the PyCharm and Git steps. It helped me work through the calculations in Parts A and B, prepare the tables, and write the explanations in English. It also helped me write the Python scripts for Parts C and D and explain the results from my runs.
 
 ## Setup and reproduction
+I used Windows PowerShell and Python 3.13.2. Part C uses the Python standard library. Part D uses Gymnasium 1.4.0 and Matplotlib 3.11.2.
 
-- Python version: 3.13.2
-- Part C uses only the Python standard library. No extra packages are needed.
-- To reproduce Part C, run `python paper_replay.py` from the project folder.
-- Results are saved in `outputs/paper-replay/replay.txt` and `outputs/paper-replay/comparison.csv`.
+Run these commands from the project folder.
+
+```powershell
+python -m pip install gymnasium==1.4.0 matplotlib==3.11.2
+
+# Part C: replay the four supplied games
+python paper_replay.py
+
+# Part D: collect games and evaluate the fixed policy
+11, 22, 33 | ForEach-Object { python collect_games.py --seed $_ }
+python evaluate_fixed.py
+python compare_states.py
+
+# Part D: train six Q-tables and evaluate the frozen policies
+11, 22, 33 | ForEach-Object { python train_q.py --seed $_ --epsilon 0.2 }
+11, 22, 33 | ForEach-Object { python train_q.py --seed $_ --epsilon 0 }
+python evaluate_policies.py
+```
 
 ## Part A — Count states and actions
 
@@ -19,7 +33,7 @@ the assignment and the PyCharm and Git steps. It helped me calculate the answers
 - [Part A — page 3](paper/part-a-03.jpeg)
 - [Part A — page 4](paper/part-a-04.jpeg)
 
-- ### Comparison of states and actions
+### Comparison of states and actions
 
 | Game | Representation | State-count formula | Type of count | Action | Legal actions in the example | Hidden information |
 |---|---|---|---|---|---|---|
@@ -64,20 +78,75 @@ All 47 checks matched the Part B reference values used in the script.
 
 ### Fixed-policy value estimates
 
-Link the shared logs, checkpoint value tables and visit counts. Explain
-missing states and differences among model-based, Monte Carlo and TD estimates.
+I used three training seeds: 11, 22 and 33. For each seed, Model-based, Monte Carlo and TD(0) used the same saved games in the same order. I checked the values after 100, 1,000 and 10,000 games. All nine model evaluations converged. All 30,000 games finished with no cut-offs.
+
+- [Game logs for seeds 11, 22 and 33](outputs/fixed-policy/)
+- [Value tables and visit counts, with and without a usable ace](outputs/fixed-policy/estimates/)
+- [Checkpoint summary](outputs/fixed-policy/estimates/summary.csv)
+- [Frequent and rare states at all three checkpoints](outputs/fixed-policy/estimates/frequent_rare_comparison.csv)
+
+The table shows examples from seed 11. Values are rounded to three decimal places.
+
+| Player sum | Dealer card | Usable ace | Games | Visits | Model-based | Monte Carlo | TD(0) |
+|---:|---:|---|---:|---:|---:|---:|---:|
+| 20 | 10 | No | 100 | 6 | 0.333 | 0.333 | 0.173 |
+| 20 | 10 | No | 1,000 | 60 | 0.467 | 0.467 | 0.511 |
+| 20 | 10 | No | 10,000 | 606 | 0.416 | 0.416 | 0.439 |
+| 4 | 6 | No | 1,000 | 1 | -0.620 | -1.000 | 0.000 |
+| 4 | 6 | No | 10,000 | 1 | -0.693 | -1.000 | 0.000 |
+| 21 | 10 | Yes | 10,000 | 190 | 0.921 | 0.921 | 0.980 |
+| 12 | 4 | Yes | 10,000 | 1 | -0.666 | -1.000 | -0.074 |
+
+**Frequent states.** With 20 points, a dealer 10 and no usable ace, the player always sticks. The game ends on that step. Model-based and Monte Carlo therefore use the same final rewards and give the same mean. After 10,000 games, this mean was 0.416 for seed 11, 0.417 for seed 22 and 0.455 for seed 33. TD(0) gives more weight to recent results because its learning rate stays at 0.1. For seed 22, its final estimate was 0.094 even after 633 visits.
+
+**Rare states.** With seed 11, the player visited (4, 6, no usable ace) only once and later lost that game. Monte Carlo recorded -1. TD(0) stayed at 0 because its update used the next state's value at the time of that visit. The model-based estimate changed from -0.620 to -0.693 as the model learned more about later states.
+
+**Missing values.** When a state had zero visits, I left its estimates blank. For seed 11, the state (12, 4, usable ace) had zero visits after 1,000 games and one visit after 10,000 games. Every game finished, so each nonterminal next state appeared in the next step of the same game. No observed state needed a missing next-state value. All three seeds reached all 280 states after 10,000 games, but some states had only one or two visits.
 
 ### Q-learning and baseline evaluation
 
-| Training seed | Policy / epsilon | Evaluation seed | Wins | Losses | Draws | Cut-offs | Mean reward |
-| --- | --- | --- | --- | --- | --- | --- | --- |
+I tested each policy on 10,000 new games per evaluation seed. The baseline used the rule “hit below 20, stick at 20 or 21.” The two learned policies used frozen Q-tables. During evaluation, they chose the action with the higher Q-value and broke ties randomly. Epsilon in the table is the value used during training.
+
+| Training seed | Policy / training epsilon | Evaluation seed | Wins | Losses | Draws | Cut-offs | Mean reward |
+|---:|---|---:|---:|---:|---:|---:|---:|
+| 11 | Baseline | 1011 | 2962 | 6462 | 576 | 0 | -0.3500 |
+| 11 | Q-learning, 0.2 | 1011 | 4228 | 4882 | 890 | 0 | -0.0654 |
+| 11 | Q-learning, 0 | 1011 | 4100 | 4929 | 971 | 0 | -0.0829 |
+| 22 | Baseline | 1022 | 2935 | 6481 | 584 | 0 | -0.3546 |
+| 22 | Q-learning, 0.2 | 1022 | 4220 | 4919 | 861 | 0 | -0.0699 |
+| 22 | Q-learning, 0 | 1022 | 4100 | 4975 | 925 | 0 | -0.0875 |
+| 33 | Baseline | 1033 | 2950 | 6496 | 554 | 0 | -0.3546 |
+| 33 | Q-learning, 0.2 | 1033 | 4124 | 5025 | 851 | 0 | -0.0901 |
+| 33 | Q-learning, 0 | 1033 | 4098 | 4943 | 959 | 0 | -0.0845 |
+
+[Full evaluation results](outputs/evaluation/policy_evaluation.csv)
 
 ### Plots and learned policies
 
-Link training curves, Q-tables, hit/stick policy tables and state-action counts.
-Separate usable-ace and no-usable-ace results.
+Each training run lasted 50,000 games. Each point on a training curve shows the mean reward over 1,000 games. The evaluation table above uses new games played after training.
+
+| Training seed | Epsilon 0.2 | Epsilon 0 |
+|---:|---|---|
+| 11 | [Training curve](outputs/q-learning/seed_11_eps_0.2/training_curve.png) | [Training curve](outputs/q-learning/seed_11_eps_0/training_curve.png) |
+| 22 | [Training curve](outputs/q-learning/seed_22_eps_0.2/training_curve.png) | [Training curve](outputs/q-learning/seed_22_eps_0/training_curve.png) |
+| 33 | [Training curve](outputs/q-learning/seed_33_eps_0.2/training_curve.png) | [Training curve](outputs/q-learning/seed_33_eps_0/training_curve.png) |
+
+Each Q-table includes the values for hit and stick, the number of times each action was tried, and the greedy action. A visit count of zero means the action was never tried in that state.
+
+- [Example Q-table without a usable ace](outputs/q-learning/seed_11_eps_0.2/q_table_ace_0.csv)
+- [Example Q-table with a usable ace](outputs/q-learning/seed_11_eps_0.2/q_table_ace_1.csv)
+- [Tables, visit counts and curves for all six runs](outputs/q-learning/)
 
 ### Explain your results
 
-Address prediction versus control, terminal updates, usable aces, exploration,
-coverage, variation across seeds and whether the learned policy improved.
+**Did Q-learning improve the result?** Yes. Across the three evaluation seeds, the baseline had a mean reward of -0.3531. Q-learning reached -0.0751 with epsilon 0.2 and -0.0850 with epsilon 0. Both learned policies improved on the baseline for every seed. All three policies still lost more games than they won.
+
+**Did exploration help?** Training with epsilon 0.2 gave the higher evaluation reward for seeds 11 and 22. For seed 33, epsilon 0 gave the higher reward: -0.0845 compared with -0.0901. Trying random actions during training gave the learner more chances to compare hit and stick. The results varied across seeds.
+
+**What did the methods learn?** Model-based learning estimated transition probabilities and rewards. Monte Carlo averaged the returns from completed games. TD(0) updated a state's value after each step. These three methods evaluated the same fixed policy. Q-learning estimated a separate value for each action and used those values to choose a policy.
+
+**Why do terminal states and usable aces matter?** When a game ends, the update uses only the final reward because there are no more moves. A usable ace changes what can happen after a hit. For example, drawing a ten at 17 with a usable ace leaves the player at 17. Drawing a ten at 17 without a usable ace ends the game with a loss. The agent keeps separate values for these two situations.
+
+All 300,000 Q-learning training games and all 90,000 evaluation games finished without a cut-off. No games were excluded.
+
+
